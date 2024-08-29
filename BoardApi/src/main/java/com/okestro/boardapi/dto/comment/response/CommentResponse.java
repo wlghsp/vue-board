@@ -1,6 +1,6 @@
 package com.okestro.boardapi.dto.comment.response;
 
-import com.okestro.boardapi.model.PostEntity;
+import com.okestro.boardapi.model.CommentEntity;
 import lombok.Getter;
 
 @Getter
@@ -9,9 +9,9 @@ public class CommentResponse {
     private String content;
     private String writer;
 
-    public CommentResponse(PostEntity post) {
-        this.id = post.getId();
-        this.content = post.getContent();
-        this.writer = post.getWriter();
+    public CommentResponse(CommentEntity comment) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.writer = comment.getWriter();
     }
 }

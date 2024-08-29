@@ -12,6 +12,8 @@ public interface PostService {
 
     void savePost(PostCreateRequest request);
 
+    PostResponse getPost(Long postId);
+
     List<PostResponse> getPosts();
 
     void updatePost(PostUpdateRequest request);

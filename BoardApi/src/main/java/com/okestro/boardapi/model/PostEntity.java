@@ -34,7 +34,7 @@ public class PostEntity {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CommentEntity> commentEntities = new ArrayList<>();
 
     @Builder

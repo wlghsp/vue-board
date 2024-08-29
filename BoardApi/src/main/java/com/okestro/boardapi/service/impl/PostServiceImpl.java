@@ -12,19 +12,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    @Transactional
     @Override
     public void savePost(PostCreateRequest request) {
         postRepository.save(new PostEntity(request.getTitle(), request.getContent(), request.getWriter(), request.getPassword()));
+    }
+
+    @Override
+    public PostResponse getPost(Long postId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("해당 postId(%s)로 게시글을 찾을 수 없습니다.", postId)));
+
+        return PostResponse.of(post);
     }
 
     @Transactional(readOnly = true)
@@ -32,11 +41,10 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> getPosts() {
         List<PostEntity> posts = postRepository.findAll();
         return posts.stream()
-                .map(PostResponse::new)
+                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.getWriter()))
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
     public void updatePost(PostUpdateRequest request) {
         PostEntity post = postRepository.findById(request.getPostId()).orElseThrow(IllegalArgumentException::new);
@@ -52,7 +60,6 @@ public class PostServiceImpl implements PostService {
         return !post.getPassword().equals(request.getPassword());
     }
 
-    @Transactional
     @Override
     public void deletePosts(PostDeleteRequest request) {
         List<Long> postIds = request.getPostIds();
