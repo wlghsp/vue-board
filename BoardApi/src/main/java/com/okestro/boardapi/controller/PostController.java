@@ -7,6 +7,7 @@ import com.okestro.boardapi.dto.post.request.PostUpdateRequest;
 import com.okestro.boardapi.dto.post.response.PostResponse;
 import com.okestro.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getPosts() {
-        return postService.getPosts();
+    public List<PostResponse> getPosts(Pageable pageable) {
+        return postService.getPosts(pageable);
     }
 
     @PutMapping("/post")

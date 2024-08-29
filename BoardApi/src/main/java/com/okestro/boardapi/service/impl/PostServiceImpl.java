@@ -9,6 +9,8 @@ import com.okestro.boardapi.dto.post.response.PostResponse;
 import com.okestro.boardapi.repo.PostRepository;
 import com.okestro.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,11 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<PostResponse> getPosts() {
-        List<PostEntity> posts = postRepository.findAll();
-        return posts.stream()
+    public List<PostResponse> getPosts(Pageable pageable) {
+        Page<PostEntity> postsPage = postRepository.findAllByOrderByIdDesc(pageable);
+        List<PostEntity> postEntities = postsPage.getContent();
+
+        return postEntities.stream()
                 .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.getWriter()))
                 .collect(Collectors.toList());
     }
