@@ -34,10 +34,10 @@ public class PostResponse {
                 .content(post.getContent())
                 .writer(post.getWriter())
                 .commentResponses(
-                    post.getCommentEntities()
-                    .stream()
-                    .map(CommentResponse::new)
-                    .collect(Collectors.toList())
+                        post.getCommentEntities()
+                                .stream()
+                                .map(CommentResponse::new)
+                                .collect(Collectors.toList())
                 )
                 .build();
     }

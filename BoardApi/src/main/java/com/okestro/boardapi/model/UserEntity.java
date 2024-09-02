@@ -2,7 +2,6 @@ package com.okestro.boardapi.model;
 
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;

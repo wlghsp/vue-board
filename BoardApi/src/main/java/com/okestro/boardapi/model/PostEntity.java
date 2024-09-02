@@ -19,7 +19,7 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="post_id")
+    @Column(name = "post_id")
     private Long id;
 
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class PostEntity {
     private String password;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<CommentEntity> commentEntities = new ArrayList<>();
+    private List<CommentEntity> commentEntities = new ArrayList<>();
 
     @Builder
     public PostEntity(String title, String content, String writer, String password) {

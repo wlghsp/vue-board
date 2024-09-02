@@ -1,9 +1,9 @@
 package com.okestro.boardapi.service.impl;
 
-import com.okestro.boardapi.model.UserEntity;
 import com.okestro.boardapi.dto.user.request.UserCreateRequest;
 import com.okestro.boardapi.dto.user.request.UserUpdateRequest;
 import com.okestro.boardapi.dto.user.response.UserResponse;
+import com.okestro.boardapi.model.UserEntity;
 import com.okestro.boardapi.repo.UserRepository;
 import com.okestro.boardapi.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findById(request.getId()).orElseThrow(IllegalArgumentException::new);
         user.updateUser(request.getName(), request.getAge());
     }
+
     @Transactional
     public void deleteUser(String userId) {
         UserEntity user = userRepository.findByUserId(userId)
