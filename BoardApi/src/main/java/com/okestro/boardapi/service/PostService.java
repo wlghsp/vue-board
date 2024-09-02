@@ -5,19 +5,19 @@ import com.okestro.boardapi.dto.post.request.PostCreateRequest;
 import com.okestro.boardapi.dto.post.request.PostDeleteRequest;
 import com.okestro.boardapi.dto.post.request.PostUpdateRequest;
 import com.okestro.boardapi.dto.post.response.PostResponse;
+import com.okestro.boardapi.dto.post.response.PostsResponse;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PostService {
 
     void savePost(PostCreateRequest request);
 
-    PostResponse getPost(Long postId);
-
-    List<PostResponse> getPosts(Pageable pageable);
-
     void updatePost(PostUpdateRequest request);
 
     void deletePosts(PostDeleteRequest request);
+
+    PostResponse getPost(Long postId);
+
+    PostsResponse getPosts(Pageable pageable);
+
 }

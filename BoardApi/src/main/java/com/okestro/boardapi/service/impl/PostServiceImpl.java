@@ -5,6 +5,7 @@ import com.okestro.boardapi.dto.post.request.PostCreateRequest;
 import com.okestro.boardapi.dto.post.request.PostDeleteRequest;
 import com.okestro.boardapi.dto.post.request.PostUpdateRequest;
 import com.okestro.boardapi.dto.post.response.PostResponse;
+import com.okestro.boardapi.dto.post.response.PostsResponse;
 import com.okestro.boardapi.model.PostEntity;
 import com.okestro.boardapi.repo.PostRepository;
 import com.okestro.boardapi.service.PostService;
@@ -31,25 +32,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getPost(Long postId) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("해당 postId(%s)로 게시글을 찾을 수 없습니다.", postId)));
-
-        return PostResponse.of(post);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<PostResponse> getPosts(Pageable pageable) {
-        Page<PostEntity> postsPage = postRepository.findAllByOrderByIdDesc(pageable);
-        List<PostEntity> postEntities = postsPage.getContent();
-
-        return postEntities.stream()
-                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.getWriter()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public void updatePost(PostUpdateRequest request) {
         PostEntity post = postRepository.findById(request.getPostId()).orElseThrow(IllegalArgumentException::new);
 
@@ -73,6 +55,31 @@ public class PostServiceImpl implements PostService {
                 deletePost(postId);
             }
         }
+    }
+
+    @Override
+    public PostResponse getPost(Long postId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("해당 postId(%s)로 게시글을 찾을 수 없습니다.", postId)));
+
+        return PostResponse.of(post);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PostsResponse getPosts(Pageable pageable) {
+        Page<PostEntity> postsPage = postRepository.findAllByOrderByIdDesc(pageable);
+        long totalElements = postsPage.getTotalElements();
+
+        List<PostEntity> postEntities = postsPage.getContent();
+        List<PostResponse> postResponses = postEntities.stream()
+                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getWriter()))
+                .collect(Collectors.toList());
+
+        return PostsResponse.builder()
+                .rows(totalElements)
+                .postResponses(postResponses)
+                .build();
     }
 
     private void deletePost(Long postId) {

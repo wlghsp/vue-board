@@ -11,9 +11,9 @@ public interface UserService {
 
     void saveUser(UserCreateRequest request);
 
-    List<UserResponse> getUsers();
-
     void updateUser(UserUpdateRequest request);
 
     void deleteUser(String userId);
+
+    List<UserResponse> getUsers();
 }

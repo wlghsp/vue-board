@@ -59,6 +59,6 @@ public class PostEntity {
 
 
     public void addComment(CommentCreateRequest request) {
-        this.commentEntities.add(new CommentEntity(this, request.getContent(), request.getWriter(), request.getPassword()));
+        this.commentEntities.add(new CommentEntity(this, request.getContent(), request.getWriter()));
     }
 }

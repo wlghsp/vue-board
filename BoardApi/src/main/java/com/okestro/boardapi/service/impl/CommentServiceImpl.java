@@ -3,6 +3,7 @@ package com.okestro.boardapi.service.impl;
 import com.okestro.boardapi.dto.comment.request.CommentCreateRequest;
 import com.okestro.boardapi.dto.comment.request.CommentDeleteRequest;
 import com.okestro.boardapi.dto.comment.request.CommentUpdateRequest;
+import com.okestro.boardapi.dto.comment.response.CommentResponse;
 import com.okestro.boardapi.model.CommentEntity;
 import com.okestro.boardapi.model.PostEntity;
 import com.okestro.boardapi.repo.CommentRepository;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -45,6 +48,18 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("해당 commentId(%s)로 댓글을 찾을 수 없습니다.", request.getCommentId())));
 
         commentRepository.delete(comment);
+    }
+
+    @Override
+    public List<CommentResponse> getComments(Long postId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("해당 postId(%s)로 게시글을 찾을 수 없습니다.", postId)));
+
+        List<CommentEntity> commentEntities = commentRepository.findByPostOrderById(post);
+
+        return commentEntities.stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
     }
 }
 

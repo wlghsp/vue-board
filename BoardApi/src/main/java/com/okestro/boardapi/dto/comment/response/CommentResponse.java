@@ -5,13 +5,15 @@ import lombok.Getter;
 
 @Getter
 public class CommentResponse {
-    private long id;
+    private long commentId;
     private String content;
     private String writer;
+    private Long postId;
 
     public CommentResponse(CommentEntity comment) {
-        this.id = comment.getId();
+        this.commentId = comment.getId();
         this.content = comment.getContent();
         this.writer = comment.getWriter();
+        this.postId = comment.getPost().getId();
     }
 }

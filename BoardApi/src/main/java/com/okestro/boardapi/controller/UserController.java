@@ -19,11 +19,6 @@ public class UserController {
         userService.saveUser(request);
     }
 
-    @GetMapping("/user")
-    public List<UserResponse> getUsers() {
-        return userService.getUsers();
-    }
-
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request) {
         userService.updateUser(request);
@@ -32,6 +27,11 @@ public class UserController {
     @DeleteMapping("/user")
     public void deleteUser(@RequestParam String userId) {
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/user")
+    public List<UserResponse> getUsers() {
+        return userService.getUsers();
     }
 
 }

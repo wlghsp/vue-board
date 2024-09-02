@@ -13,32 +13,25 @@ import java.util.stream.Collectors;
 @Builder
 @Getter
 public class PostResponse {
-    private long id;
+    private long postId;
     private String title;
     private String content;
     private String writer;
     private List<CommentResponse> commentResponses;
 
-    public PostResponse(long id, String title, String content, String writer) {
-        this.id = id;
+    public PostResponse(long postId, String title, String writer) {
+        this.postId = postId;
         this.title = title;
-        this.content = content;
         this.writer = writer;
     }
 
     public static PostResponse of(PostEntity post) {
         return PostResponse
                 .builder()
-                .id(post.getId())
+                .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writer(post.getWriter())
-                .commentResponses(
-                        post.getCommentEntities()
-                                .stream()
-                                .map(CommentResponse::new)
-                                .collect(Collectors.toList())
-                )
                 .build();
     }
 }

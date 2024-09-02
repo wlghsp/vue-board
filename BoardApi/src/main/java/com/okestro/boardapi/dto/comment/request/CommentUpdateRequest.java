@@ -6,5 +6,4 @@ import lombok.Getter;
 public class CommentUpdateRequest {
     private Long commentId;
     private String content;
-    private String password;
 }
