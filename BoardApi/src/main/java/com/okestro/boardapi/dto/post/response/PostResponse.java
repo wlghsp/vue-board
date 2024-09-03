@@ -1,0 +1,36 @@
+package com.okestro.boardapi.dto.post.response;
+
+import com.okestro.boardapi.dto.comment.response.CommentResponse;
+import com.okestro.boardapi.model.PostEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.List;
+
+@AllArgsConstructor
+@Builder
+@Getter
+public class PostResponse {
+    private long postId;
+    private String title;
+    private String content;
+    private String userId;
+    private List<CommentResponse> commentResponses;
+
+    public PostResponse(long postId, String title, String userId) {
+        this.postId = postId;
+        this.title = title;
+        this.userId = userId;
+    }
+
+    public static PostResponse of(PostEntity post) {
+        return PostResponse
+                .builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .userId(post.getUserId())
+                .build();
+    }
+}
