@@ -17,8 +17,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public void savePost(@RequestBody PostCreateRequest request) {
-        postService.savePost(request);
+    public PostResponse savePost(@RequestBody PostCreateRequest request) {
+        return postService.savePost(request);
     }
 
     @PutMapping("/post")
@@ -26,7 +26,12 @@ public class PostController {
         postService.updatePost(request);
     }
 
-    @DeleteMapping("/post")
+    @DeleteMapping("/post/{postId}")
+    public void deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+    }
+
+    @DeleteMapping("/posts")
     public void deletePosts(@RequestBody PostDeleteRequest request) {
         postService.deletePosts(request);
     }

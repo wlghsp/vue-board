@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Builder
@@ -16,13 +15,13 @@ public class PostResponse {
     private long postId;
     private String title;
     private String content;
-    private String writer;
+    private String userId;
     private List<CommentResponse> commentResponses;
 
-    public PostResponse(long postId, String title, String writer) {
+    public PostResponse(long postId, String title, String userId) {
         this.postId = postId;
         this.title = title;
-        this.writer = writer;
+        this.userId = userId;
     }
 
     public static PostResponse of(PostEntity post) {
@@ -31,7 +30,7 @@ public class PostResponse {
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .writer(post.getWriter())
+                .userId(post.getUserId())
                 .build();
     }
 }

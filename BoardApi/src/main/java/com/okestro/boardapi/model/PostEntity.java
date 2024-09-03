@@ -29,7 +29,7 @@ public class PostEntity {
     private String content;
 
     @Column(nullable = false)
-    private String writer;
+    private String userId;
 
     @Column(nullable = false)
     private String password;
@@ -38,13 +38,13 @@ public class PostEntity {
     private List<CommentEntity> commentEntities = new ArrayList<>();
 
     @Builder
-    public PostEntity(String title, String content, String writer, String password) {
+    public PostEntity(String title, String content, String userId, String password) {
         if (isPostNameEmpty(title)) {
             throw new IllegalArgumentException(String.format("잘못된 title(%s)이 들어왔습니다", title));
         }
         this.title = title;
         this.content = content;
-        this.writer = writer;
+        this.userId = userId;
         this.password = password;
     }
 

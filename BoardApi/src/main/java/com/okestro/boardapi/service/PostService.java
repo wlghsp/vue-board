@@ -10,14 +10,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostService {
 
-    void savePost(PostCreateRequest request);
+    PostResponse savePost(PostCreateRequest request);
 
     void updatePost(PostUpdateRequest request);
+
+    void deletePost(Long postId);
 
     void deletePosts(PostDeleteRequest request);
 
     PostResponse getPost(Long postId);
 
     PostsResponse getPosts(Pageable pageable);
-
 }

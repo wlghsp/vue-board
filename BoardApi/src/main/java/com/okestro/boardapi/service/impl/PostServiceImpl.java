@@ -27,8 +27,9 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
     @Override
-    public void savePost(PostCreateRequest request) {
-        postRepository.save(new PostEntity(request.getTitle(), request.getContent(), request.getWriter(), request.getPassword()));
+    public PostResponse savePost(PostCreateRequest request) {
+        PostEntity saved = postRepository.save(new PostEntity(request.getTitle(), request.getContent(), request.getUserId(), request.getPassword()));
+        return PostResponse.of(saved);
     }
 
     @Override
@@ -42,8 +43,12 @@ public class PostServiceImpl implements PostService {
         post.updatePost(request.getTitle(), request.getContent());
     }
 
-    private boolean passwordNotMatched(PostUpdateRequest request, PostEntity post) {
-        return !post.getPassword().equals(request.getPassword());
+    @Override
+    public void deletePost(Long postId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        postRepository.delete(post);
     }
 
     @Override
@@ -73,7 +78,7 @@ public class PostServiceImpl implements PostService {
 
         List<PostEntity> postEntities = postsPage.getContent();
         List<PostResponse> postResponses = postEntities.stream()
-                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getWriter()))
+                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getUserId()))
                 .collect(Collectors.toList());
 
         return PostsResponse.builder()
@@ -82,11 +87,8 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
-    private void deletePost(Long postId) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(IllegalArgumentException::new);
-
-        postRepository.delete(post);
+    private boolean passwordNotMatched(PostUpdateRequest request, PostEntity post) {
+        return !post.getPassword().equals(request.getPassword());
     }
 
     private boolean isPostIdsEmpty(List<Long> postIds) {

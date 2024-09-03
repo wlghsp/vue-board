@@ -6,6 +6,6 @@ import lombok.Getter;
 public class PostCreateRequest {
     private String title;
     private String content;
-    private String writer;
+    private String userId;
     private String password;
 }
