@@ -33,7 +33,7 @@ export default {
       try {
         console.log(this.postId);
         const response = await axios.get(
-            `http://localhost:8080/comment/${this.postId}`
+            `/comment/${this.postId}`
         );
 
         this.comments = response.data;

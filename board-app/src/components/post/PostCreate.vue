@@ -3,66 +3,80 @@
     <b-input v-model="title" placeholder="제목을 입력해주세요."></b-input>
     <b-input v-model="password" placeholder="패스워드 입력해주세요"></b-input>
     <b-form-textarea
-        v-model="context"
+        v-model="content"
         placeholder="내용을 입력해 주세요"
         rows="3"
         max-rows="6"
     ></b-form-textarea>
     <br>
-    <b-button @click="updateMode ? updateContent() : uploadContent()">저장</b-button>&nbsp;
+    <b-button @click="updateMode ? updatePost() : savePost()">저장</b-button>&nbsp;
     <b-button @click="cancel">취소</b-button>
   </div>
 </template>
 
 <script>
-import data from '@/data'
+import axios from 'axios';
 
 export default {
   name: 'PostCreate',
   data() {
     return {
       title: '',
-      context: '',
+      content: '',
       password: '',
-      user_id: 1,
+      userId: 'gogo',
       updateObject: null,
-      updateMode: this.$route.params.postId > 0 ? true : false,
+      updateMode: this.$route.params.postId > 0,
     }
   },
   created() {
-    if(this.$route.params.contentId > 0) {
-      const contentId = Number(this.$route.params.contentId)
-      this.updateObject = data.Content.filter(contentItem => contentItem.content_id === contentId)[0]
-      this.title = this.updateObject.title;
-      this.context = this.updateObject.context;
-      this.password = this.updateObject.password;
+    if (this.updateMode) {
+      this.fetchPost();
     }
   },
   methods: {
-    uploadContent() { // 저장
-
-      let contentItems = data.Content.sort((a, b) => { return b.content_id - a.content_id });
-      const content_id = contentItems[0].content_id + 1;  // 마지막 데이터의 id + 1
-
-      data.Content.push({
-        content_id: content_id,
-        user_id: this.user_id,
-        title: this.title,
-        context: this.context,
-        created_at: this.created_at,
-        updated_at: this.updated_at
-      })
-
-      this.$router.push({
-        path: '/'
-      })
+    async fetchPost() {
+      try {
+        const postId = Number(this.$route.params.postId);
+        const response = await axios.get(`/post/${postId}`);
+        this.updateObject = response.data;
+        this.title = this.updateObject.title;
+        this.content = this.updateObject.content;
+        this.password = this.updateObject.password;
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
     },
-    updateContent() { // 수정
-      this.updateObject.title = this.title;
-      this.updateObject.context = this.context;
-      this.$router.push({
-        path: '/'
-      })
+    async savePost() { // Save new post
+      try {
+        const postData = {
+          title: this.title,
+          content: this.content,
+          userId: this.userId,
+          password: this.password
+        };
+
+        const response = await axios.post('/post', postData);
+        const postId = response.data.postId; // Assume the backend returns the new postId
+        this.$router.push({ path: `/post/detail/${postId}` });
+      } catch (error) {
+        console.error('Error saving post:', error);
+      }
+    },
+    async updatePost() { // Update existing post
+      try {
+        let postId = this.$route.params.postId;
+        const postData = {
+          postId: postId,
+          title: this.title,
+          content: this.content,
+          password: this.password
+        };
+        await axios.put('/post', postData);
+        this.$router.push({ path: `/post/detail/${postId}` });
+      } catch (error) {
+        console.error('Error updating post:', error);
+      }
     },
     cancel() {
       this.$router.push({

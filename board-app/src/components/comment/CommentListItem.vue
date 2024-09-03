@@ -41,7 +41,8 @@ export default {
             commentId: this.commentObj.commentId,
             content: newContent
           };
-          const response = await axios.put('http://localhost:8080/comment', updateData);
+
+          await axios.put('/comment', updateData);
 
           this.commentObj.content = newContent;  // Update the content locally
           alert("댓글이 수정되었습니다.");
@@ -57,7 +58,8 @@ export default {
           let deleteData = {
             data: { commentId: this.commentObj.commentId }
           };
-          const response = await axios.delete('http://localhost:8080/comment', deleteData);
+
+          await axios.delete('/comment', deleteData);
 
           this.$emit('comment-deleted', this.commentObj.commentId);  // Emit an event to notify parent about the deletion
           alert("댓글이 삭제되었습니다.");

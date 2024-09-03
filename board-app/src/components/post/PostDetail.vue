@@ -7,7 +7,7 @@
           <div class="content-detail-content-info-left-subject">{{ title }}</div>
         </div>
         <div class="content-detail-content-info-right">
-          <div class="content-detail-content-info-right-user">글쓴이: {{ writer }}</div>
+          <div class="content-detail-content-info-right-user">글쓴이: {{ userId }}</div>
         </div>
       </div>
       <div class="content-detail-content">{{ content }}</div>
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import data from "@/data";
 import CommentList from "../comment/CommentList.vue";
 import axios from "axios";
 
@@ -34,7 +33,7 @@ export default {
       postId: '',
       title: '',
       content: '',
-      writer: '',
+      userId: '',
     };
   },
   methods: {
@@ -43,7 +42,7 @@ export default {
 
       try {
         const response = await axios.get(
-            `http://localhost:8080/post/${this.$route.params.postId}`
+            `/post/${this.$route.params.postId}`
         );
         const obj = response.data;
 
@@ -51,20 +50,29 @@ export default {
 
         this.title = obj.title;
         this.content = obj.content;
-        this.writer = obj.writer;
+        this.userId = obj.userId;
 
       } catch (error) {
         console.error("데이터를 불러오는 중 에러가 발생했습니다:", error);
       }
     },
-    deleteData() {
-      const content_index = data.Content.findIndex(
-          contentItem => contentItem.content_id === this.postId
-      );
-      data.Content.splice(content_index, 1); // 데이터 삭제
-      this.$router.push({
-        path: "/"
-      });
+    async deleteData() {
+      if (confirm("게시글을 삭제하시겠습니까?")) {
+
+        try {
+          await axios.delete(`/post/${this.postId}`);
+
+          alert("게시글이 삭제되었습니다.");
+
+          this.$router.push({
+            path: "/"
+          });
+        } catch (error) {
+          console.error("Failed to delete post:", error);
+          alert("게시글 삭제에 실패했습니다.");
+        }
+
+      }
     },
     updateData() {
       this.$router.push({

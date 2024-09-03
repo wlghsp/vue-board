@@ -35,7 +35,7 @@ export default {
           label: "제목"
         },
         {
-          key: "writer",
+          key: "userId",
           label: "글쓴이"
         },
       ],
@@ -45,7 +45,7 @@ export default {
     async fetchPosts() {
       try {
         const response = await axios.get(
-            `http://localhost:8080/posts?page=${this.currentPage - 1}&size=${this.perPage}`
+            `/posts?page=${this.currentPage - 1}&size=${this.perPage}`
         );
         console.log(response.data)
 
@@ -56,7 +56,7 @@ export default {
         console.error("데이터를 불러오는 중 에러가 발생했습니다:", error);
       }
     },
-    rowClick(item, index, e) {
+    rowClick(item) {
       this.$router.push({
         path: `/post/detail/${item.postId}`
       });

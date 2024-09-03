@@ -41,7 +41,7 @@ export default {
         };
         console.log(commentData);
 
-        await axios.post(`http://localhost:8080/comment`, commentData);
+        await axios.post(`/comment`, commentData);
 
         this.reloadComment();
         this.content = "";
