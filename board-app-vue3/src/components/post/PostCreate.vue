@@ -4,19 +4,19 @@
     <b-form-input v-model="password" placeholder="패스워드 입력해주세요"></b-form-input>
     <b-form-textarea
         v-model="content"
+        max-rows="20"
         placeholder="내용을 입력해 주세요"
-        rows="3"
-        max-rows="6"
+        rows="10"
     ></b-form-textarea>
-    <br />
-    <b-button @click="updateMode ? updatePost() : savePost()">저장</b-button>&nbsp;
+    <br/>
+    <b-button :disabled="isFormInvalid" @click="updateMode ? updatePost() : savePost()">저장</b-button>&nbsp;
     <b-button @click="cancel">취소</b-button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import {computed, defineComponent, onMounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import axios from 'axios';
 
 export default defineComponent({
@@ -54,9 +54,10 @@ export default defineComponent({
           password: password.value,
         };
 
-        const response = await axios.post('/post', postData);
-        const postId = response.data.postId; // Assume the backend returns the new postId
-        router.push({ path: `/post/detail/${postId}` });
+        await axios.post('/post', postData);
+
+        router.push({path: `/`});
+
       } catch (error) {
         console.error('Error saving post:', error);
       }
@@ -79,8 +80,12 @@ export default defineComponent({
     };
 
     const cancel = () => {
-      router.push({ path: '/' });
+      router.push({path: '/'});
     };
+
+    const isFormInvalid = computed(() => {
+      return !title.value || !content.value || !password.value;
+    });
 
     onMounted(() => {
       if (updateMode.value) {
@@ -96,6 +101,7 @@ export default defineComponent({
       savePost,
       updatePost,
       cancel,
+      isFormInvalid,
     };
   },
 });
