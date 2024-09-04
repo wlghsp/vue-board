@@ -16,12 +16,14 @@ public class PostResponse {
     private String title;
     private String content;
     private String userId;
+    private int commentCount;
     private List<CommentResponse> commentResponses;
 
-    public PostResponse(long postId, String title, String userId) {
+    public PostResponse(long postId, String title, String userId, int commentCount) {
         this.postId = postId;
         this.title = title;
         this.userId = userId;
+        this.commentCount = commentCount;
     }
 
     public static PostResponse of(PostEntity post) {

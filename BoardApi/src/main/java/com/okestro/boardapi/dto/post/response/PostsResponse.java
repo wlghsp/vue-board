@@ -1,15 +1,11 @@
 package com.okestro.boardapi.dto.post.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-import java.util.List;
-
-@AllArgsConstructor
 @Builder
-@Getter
+@Data
 public class PostsResponse {
-    private long rows;
-    private List<PostResponse> postResponses;
+    private boolean result;
+    private PostData data;
 }

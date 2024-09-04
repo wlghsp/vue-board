@@ -6,7 +6,6 @@ import com.okestro.boardapi.dto.post.request.PostDeleteRequest;
 import com.okestro.boardapi.dto.post.request.PostUpdateRequest;
 import com.okestro.boardapi.dto.post.response.PostResponse;
 import com.okestro.boardapi.dto.post.response.PostsResponse;
-import org.springframework.data.domain.Pageable;
 
 public interface PostService {
 
@@ -20,5 +19,5 @@ public interface PostService {
 
     PostResponse getPost(Long postId);
 
-    PostsResponse getPosts(Pageable pageable);
+    PostsResponse getPosts(Integer perPage, Integer page);
 }

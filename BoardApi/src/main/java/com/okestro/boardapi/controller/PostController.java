@@ -8,7 +8,6 @@ import com.okestro.boardapi.dto.post.response.PostResponse;
 import com.okestro.boardapi.dto.post.response.PostsResponse;
 import com.okestro.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -42,8 +41,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public PostsResponse getPosts(Pageable pageable) {
-        return postService.getPosts(pageable);
+    public PostsResponse getPosts(@RequestParam Integer perPage, @RequestParam Integer page) {
+        return postService.getPosts(perPage, page);
     }
 
 }

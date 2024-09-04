@@ -4,6 +4,8 @@ package com.okestro.boardapi.service.impl;
 import com.okestro.boardapi.dto.post.request.PostCreateRequest;
 import com.okestro.boardapi.dto.post.request.PostDeleteRequest;
 import com.okestro.boardapi.dto.post.request.PostUpdateRequest;
+import com.okestro.boardapi.dto.post.response.PageInfo;
+import com.okestro.boardapi.dto.post.response.PostData;
 import com.okestro.boardapi.dto.post.response.PostResponse;
 import com.okestro.boardapi.dto.post.response.PostsResponse;
 import com.okestro.boardapi.model.PostEntity;
@@ -11,13 +13,13 @@ import com.okestro.boardapi.repo.PostRepository;
 import com.okestro.boardapi.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -72,18 +74,19 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = true)
     @Override
-    public PostsResponse getPosts(Pageable pageable) {
-        Page<PostEntity> postsPage = postRepository.findAllByOrderByIdDesc(pageable);
-        long totalElements = postsPage.getTotalElements();
+    public PostsResponse getPosts(Integer perPage, Integer page) {
+        Pageable pageable = PageRequest.of(page - 1, perPage); // 페이지 - 1
+        Page<PostResponse> postsPage = postRepository.findAllWithCommentCount(pageable);
 
-        List<PostEntity> postEntities = postsPage.getContent();
-        List<PostResponse> postResponses = postEntities.stream()
-                .map(post -> new PostResponse(post.getId(), post.getTitle(), post.getUserId()))
-                .collect(Collectors.toList());
+        long totalElements = postsPage.getTotalElements();
+        List<PostResponse> postResponses = postsPage.getContent();
 
         return PostsResponse.builder()
-                .rows(totalElements)
-                .postResponses(postResponses)
+                .result(true)
+                .data(new PostData(
+                        postResponses,
+                        new PageInfo(pageable.getPageNumber() + 1, totalElements)) // 페이지 + 1 하기
+                )
                 .build();
     }
 
